@@ -1,8 +1,28 @@
 import React from 'react'
 import banner from '../assets/banner.jpg'
 import all_product from '../assets/all_product'
+import Usercontext from './Context'
+import { useContext } from 'react'
 const Mens = () => {
+ const {cart,setcart}=useContext(Usercontext)
+  const setdata = (item) => {
+  const existingItem = cart.find((i) => i.id === item.id)
 
+  if (existingItem) {
+    // If item already exists → increase quantity
+    const updatedCart = cart.map((i) =>
+      i.id === item.id
+        ? { ...i, quantity: i.quantity + 1 }
+        : i
+    )
+    setcart(updatedCart)
+  } else {
+    // If new item → add with quantity 1
+    setcart([...cart, { ...item, quantity: 1 }])
+  }
+
+  setcount((prev) => prev + 1)
+}
   const men=all_product.filter((item,id)=>item.category=="men")
   return (
     <div className='h-screen w-full px-15 pt-10 text-5xl bg-gradient-to-b from-green-400 to-white'>
@@ -18,7 +38,11 @@ const Mens = () => {
             <div className="price text-2xl ">Price:${item.new_price}</div>
             <div className="oldprice text-2xl line-through text-gray-700">${item.old_price}</div>
         </div>
+       <button 
+        onClick={()=>setdata(item)}
+       className='text-2xl flex justify-center items-center bg-red-700 h-10 mt-3 w-full rounded-2xl '>Add to cart</button>
       </div>
+       
   
     })}
     </div>
